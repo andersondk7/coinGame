@@ -10,7 +10,7 @@ abstract class CoinTossHistory extends ItemGenerator[CoinHistoryCriteria, CoinHi
 
   override def next(criteria: CoinHistoryCriteria): (CoinHistoryCriteria, CoinHistory) = {
     val (nextSeed: Seed, coin: Coin) = toss(criteria.seed)
-    val updatedHistory = criteria.previous.fold(CoinHistory.initial(coin)) (coinHistory  => coinHistory + coin )
+    val updatedHistory = criteria.previous.fold(CoinHistory.initial(coin))(coinHistory => coinHistory + coin)
     (CoinHistoryCriteria(nextSeed, Some(updatedHistory)), updatedHistory)
   }
 }
@@ -34,15 +34,16 @@ object RandomCoinTossHistory extends CoinTossHistory {
 }
 
 abstract class BiasedCoinTossHistory(
-                               prefered: Coin, splitRatio: Int = 3) extends CoinTossHistory {
+  prefered: Coin,
+  splitRatio: Int = 3)
+  extends CoinTossHistory {
   private val notPreferred = if (prefered == Coin.HeadsUp) Coin.TailsUp else Coin.HeadsUp
-  def toss(seed: Seed): (Seed, Coin) = {
+  def toss(seed: Seed): (Seed, Coin) =
     (
       seed.next,
       if (seed.value % splitRatio == 0) notPreferred
       else prefered
     )
-  }
 }
 
 final case class MostlyHeadsCoinTossHistory(splitRatio: Int = 3) extends BiasedCoinTossHistory(Coin.HeadsUp, splitRatio)

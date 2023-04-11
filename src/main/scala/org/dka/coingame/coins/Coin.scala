@@ -5,7 +5,7 @@ import cats.syntax.show.*
 
 import Coin._
 final case class Coin(face: Face) {
-  val flipSide: Coin  = if (face == Face.Tails) Coin.HeadsUp else Coin.TailsUp 
+  val flipSide: Coin = if (face == Face.Tails) Coin.HeadsUp else Coin.TailsUp
 }
 
 object Coin {
@@ -19,11 +19,10 @@ object Coin {
   val TailsUp: Coin = Coin(Face.Tails)
 
   def flipSide(coin: Coin): Coin = if (coin == HeadsUp) TailsUp else HeadsUp
-  
-  implicit val showFace: Show[Face] = Show.show({
+
+  implicit val showFace: Show[Face] = Show.show {
     case Face.Heads => "Heads"
     case Face.Tails => "Tails"
-  })
+  }
 
 }
-

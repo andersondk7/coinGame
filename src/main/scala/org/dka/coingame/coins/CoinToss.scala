@@ -7,8 +7,7 @@ import Coin._
 object CoinTossers {
 
   enum TossType {
-    case
-    AlwaysHeads, AlwaysTails, Random, MostlyHeads, MostlyTails
+    case AlwaysHeads, AlwaysTails, Random, MostlyHeads, MostlyTails
   }
 }
 
@@ -31,15 +30,16 @@ object RandomCoinToss extends ItemGenerator[Seed, Coin] {
 }
 
 abstract class BiasedCoinToss(
-                               prefered: Coin, splitRatio: Int = 3) extends ItemGenerator[Seed, Coin] {
+  prefered: Coin,
+  splitRatio: Int = 3)
+  extends ItemGenerator[Seed, Coin] {
   private val notPreferred = if (prefered == Coin.HeadsUp) Coin.TailsUp else Coin.HeadsUp
-  def next(seed: Seed): (Seed, Coin) = {
+  def next(seed: Seed): (Seed, Coin) =
     (
       seed.next,
       if (seed.value % splitRatio == 0) notPreferred
       else prefered
     )
-  }
 }
 final case class MostlyHeadsCoinToss(splitRatio: Int = 3) extends BiasedCoinToss(Coin.HeadsUp, splitRatio)
 
