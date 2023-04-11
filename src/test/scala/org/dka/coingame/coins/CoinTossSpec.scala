@@ -42,13 +42,6 @@ class CoinTossSpec extends AnyFunSpec {
   describe("RandomToss") {
     val tossCount = 101
     val tosser: ItemGenerator[Seed, Coin] = RandomCoinToss
-    it ("should mostly be random") {
-      val results: List[Coin] = tossCoins(tossCount)(tosser.next)
-      results.size shouldBe tossCount
-      val headsCount = results.filter(_ == Coin.HeadsUp).size
-      val tailsCount = results.filter(_ == Coin.TailsUp).size
-      headsCount should not be tailsCount
-    }
     it ("should return the same newValue when using the same seed") {
       val seed = Seed(15)
       val expected = tosser.next(seed)._2

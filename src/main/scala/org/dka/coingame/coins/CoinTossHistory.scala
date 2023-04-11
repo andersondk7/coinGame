@@ -3,19 +3,15 @@ package org.dka.coingame.coins
 import org.dka.coingame.*
 import org.dka.coingame.coins.Coin._
 
-final case class CoinHistoryCriteria(seed: Seed, previous: CoinHistory)
-
-object CoinHistoryTossers {
-  
-}
+final case class CoinHistoryCriteria(seed: Seed, previous: Option[CoinHistory] = None)
 
 abstract class CoinTossHistory extends ItemGenerator[CoinHistoryCriteria, CoinHistory] {
   protected def toss(seed: Seed): (Seed, Coin)
 
   override def next(criteria: CoinHistoryCriteria): (CoinHistoryCriteria, CoinHistory) = {
     val (nextSeed: Seed, coin: Coin) = toss(criteria.seed)
-    val coinHistory = CoinHistory(coin, criteria.previous)
-    (CoinHistoryCriteria(nextSeed, coinHistory), coinHistory)
+    val updatedHistory = criteria.previous.fold(CoinHistory.initial(coin)) (coinHistory  => coinHistory + coin )
+    (CoinHistoryCriteria(nextSeed, Some(updatedHistory)), updatedHistory)
   }
 }
 
